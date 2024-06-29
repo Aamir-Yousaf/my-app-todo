@@ -1,29 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
-import { useState } from 'react';
+import logo from "./logo.svg";
+import "./App.css";
+import { useState } from "react";
 
 function App() {
   const [todoList, setTodoList] = useState([]);
-  const [todo, setTodo]= useState("");
-  const [error, setError]= useState(false);
-  
+  const [todo, setTodo] = useState("");
+  const [error, setError] = useState(false);
+
   const handleSubmit = () => {
-    if(todo){
-     let newTodoLists = [...todoList];
-     newTodoLists.push({ text: todo, markAsRead: false });
-     setTodoList(newTodoLists);
-     setTodo("");
+    if (todo) {
+      let newTodoLists = [...todoList];
+      newTodoLists.push({ text: todo, markAsRead: false });
+      setTodoList(newTodoLists);
+      setTodo("");
+      setError(false);
+    } else {
+      setError(true);
     }
-    else{
-     setError(true); 
-    }
-  }
-  const handleMarkAsRead = () =>{
-     console.log("marked")
-  }
+  };
+
+  const handleMarkAsRead = (index) => {
+    let newTodoLists = [...todoList];
+    newTodoLists[index]={
+      text: newTodoLists[index].text ,markAsRead : true,
+    };
+   
+    setTodoList(newTodoLists);
+  };
+
   const handleChange = (e) => {
-     setTodo(e.target.value);
-  }
+    setTodo(e.target.value);
+  };
+ const handleDeleted=(index) =>{
+  let newTodoLists = [...todoList];
+  newTodoLists.splice(index,1);
+  setTodoList(newTodoLists);
+ }
   return (
     <div className="App">
       <input
@@ -34,13 +46,20 @@ function App() {
         value={todo}
       />
       <button onClick={handleSubmit}>Submit Todo</button>
-      {error ? <p>input is empty</p> : null}
-      {todoList.map((items, i) => (
+      {error ? <p>Input is empty</p> : null}
+      {todoList.map((item, i) => (
         <div key={i}>
-          <p>{items}</p>
-          <button onClick={() => handleMarkAsRead(i)}> MarkAsRead </button>
+          <p
+            style={{
+              textDecoration: item.markAsRead ? "line-through" : "none",
+            }}
+          >
+            {item.text}
+          </p>
+          <button onClick={() => handleMarkAsRead(i)}>Mark As Read</button>
+          <button onClick={() => handleDeleted(i)}>Delete</button>
         </div>
-      ))}
+      ))} 
     </div>
   );
 }
