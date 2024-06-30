@@ -1,5 +1,3 @@
-import logo from "./logo.svg";
-import "./App.css";
 import { useState } from "react";
 import {
   Button,
@@ -9,13 +7,18 @@ import {
   ModalHeader,
   ModalBody,
 } from "reactstrap";
+import "./App.css";
 
 function App() {
   const [todoList, setTodoList] = useState([]);
+  const [deletedItems, setDeletedItems] = useState([]);
   const [todo, setTodo] = useState("");
   const [error, setError] = useState(false);
   const [isEdit, setEdit] = useState(false);
   const [saveIndex, setIndex] = useState(-1);
+  const [isDustbinOpen, setDustbinOpen] = useState(false);
+  const [isItemBeingDeleted, setItemBeingDeleted] = useState(false);
+  const [deletingItemIndex, setDeletingItemIndex] = useState(null);
 
   const handleSubmit = () => {
     if (todo) {
@@ -43,11 +46,26 @@ function App() {
   };
 
   const handleDelete = (index) => {
-    let newTodoLists = [...todoList];
-    if (newTodoLists[index].markAsRead) {
-      newTodoLists.splice(index, 1);
-      setTodoList(newTodoLists);
-    }
+    // Trigger animation and change bin image to open
+    setItemBeingDeleted(true);
+    setDustbinOpen(true);
+    setDeletingItemIndex(index);
+
+    setTimeout(() => {
+      let newTodoLists = [...todoList];
+      if (newTodoLists[index].markAsRead) {
+        let deletedItem = newTodoLists.splice(index, 1)[0];
+        setTodoList(newTodoLists);
+        setDeletedItems([...deletedItems, deletedItem]);
+      }
+
+      // Close the bin lid after the animation
+      setTimeout(() => {
+        setDustbinOpen(false);
+        setItemBeingDeleted(false);
+        setDeletingItemIndex(null);
+      }, 1000); // Adjust the timing to match the closing animation
+    }, 1000); // Adjust the timing to match the delete animation
   };
 
   const handleEdit = (index) => {
@@ -68,6 +86,16 @@ function App() {
     setEdit(false);
   };
 
+  const handleRemoveAll = () => {
+    setTodoList([]);
+    setDeletedItems([]);
+    setDustbinOpen(false);
+  };
+
+  const toggleDustbin = () => {
+    setDustbinOpen(!isDustbinOpen);
+  };
+
   return (
     <div className="App">
       <Input
@@ -84,11 +112,22 @@ function App() {
       >
         {isEdit ? "Edit Todo" : "Add Todo"}
       </Button>
+      <Button className="mx-3" color="danger" onClick={handleRemoveAll}>
+        Remove All
+      </Button>
       {error && <Alert color="danger">Input is empty</Alert>}
+      <div className="dustbin" onClick={toggleDustbin}>
+        <img
+          src={isDustbinOpen ? "/binopen.png" : "/binclose.png"}
+          alt="Dustbin"
+        />
+      </div>
       {todoList.map((item, i) => (
         <div
           key={i}
-          className="input-btn d-flex align-items-center justify-content-center gap-3"
+          className={`input-btn d-flex align-items-center justify-content-center gap-3 ${
+            isItemBeingDeleted && deletingItemIndex === i ? "deleting" : ""
+          }`}
         >
           <p
             className="output col-6 d-flex align-items-center"
@@ -111,7 +150,6 @@ function App() {
           </div>
         </div>
       ))}
-      {/* Example Modal for Edit */}
       <Modal isOpen={isEdit} toggle={() => setEdit(false)}>
         <ModalHeader>Edit Todo</ModalHeader>
         <ModalBody>
@@ -129,6 +167,13 @@ function App() {
           </Button>
         </ModalBody>
       </Modal>
+      {isDustbinOpen && (
+        <div className="dustbin-contents">
+          {deletedItems.map((item, index) => (
+            <p key={index}>{item.text}</p>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

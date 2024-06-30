@@ -27,6 +27,48 @@
   margin: 0 auto;
   padding-left: 10px;
 }
+/* Define animations for moving items to the dustbin */
+@keyframes moveToDustbin {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100px) translateX(-50px);
+    opacity: 0;
+  }
+}
+
+.deleting {
+  animation: moveToDustbin 1s forwards;
+}
+
+/* Styles for the dustbin and other elements */
+.dustbin {
+  position: relative;
+  margin: 20px auto;
+  width: 50px;
+  height: 100px;
+  cursor: pointer;
+}
+
+.dustbin img {
+  width: 100%;
+  height: auto;
+}
+
+.dustbin-contents {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+input, button {
+  margin-top: 10px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
