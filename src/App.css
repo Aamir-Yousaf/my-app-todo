@@ -39,35 +39,10 @@
   }
 }
 
-.deleting {
-  animation: moveToDustbin 1s forwards;
-}
 
-/* Styles for the dustbin and other elements */
-.dustbin {
-  position: relative;
-  margin: 20px auto;
-  width: 50px;
-  height: 100px;
-  cursor: pointer;
-}
 
-.dustbin img {
-  width: 100%;
-  height: auto;
-}
 
-.dustbin-contents {
-  margin-top: 20px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-}
 
-input, button {
-  margin-top: 10px;
-}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
