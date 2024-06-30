@@ -1,7 +1,8 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { useState } from "react";
-
+import { Button } from "reactstrap";
+import { Input } from "reactstrap";
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [todo, setTodo] = useState("");
@@ -46,33 +47,62 @@ function App() {
   let newTodoLists = [...todoList];
   setTodo(newTodoLists[index].text);
   setEdit(true);
+  setIndex(index);
  }
+ const saveEdit = () =>{
+  let newTodoLists = [...todoList];
+  newTodoLists[saveIndex]={
+    ...newTodoLists[saveIndex],
+    text:todo,
+
+  };
+  setTodoList(newTodoLists);
+  setTodo("");
+  setEdit(false);
+ };
   return (
-    <div className="App">
-      <input
+    <div className="App ">
+      <Input
         type="text"
         placeholder="enter your todo"
         className="todo-input"
         onChange={handleChange}
         value={todo}
       />
-      <button onClick={handleSubmit}>{isEdit ? "Edit Todo" :"Add Todo"}
-      </button>
-      {error ? <p>Input is empty</p> : null}
+      <Button
+        className="edit-btn my-3"
+        color={isEdit ? "danger" : "primary"}
+        onClick={isEdit ? saveEdit : handleSubmit}
+      >
+        {isEdit ? "Edit Todo" : "Add Todo"}
+      </Button>
+      {error ? <p className="text-danger">Input is empty</p> : null}
       {todoList.map((item, i) => (
-        <div key={i}>
+        <div
+          key={i}
+          className="input-btn d-flex align-items-center justify-content-center gap-3 "
+        >
           <p
+            className="output col-6 d-flex align-items-center "
             style={{
               textDecoration: item.markAsRead ? "line-through" : "none",
             }}
           >
-            {item.text}
+            {`${i + 1}) ${item.text}`}
           </p>
-          <button onClick={() => handleMarkAsRead(i)}>Mark As Read</button>
-          <button onClick={() => handleDeleted(i)}>Delete</button>
-          <button onClick={() => handleEdit(i)}>Edit</button>
+          <div className="col-6 d-flex gap-2">
+            <Button color="primary" onClick={() => handleMarkAsRead(i)}>
+              Mark As Read
+            </Button>
+            <Button color="primary" onClick={() => handleDeleted(i)}>
+              Delete
+            </Button>
+            <Button color="danger" onClick={() => handleEdit(i)}>
+              Edit
+            </Button>
+          </div>
         </div>
-      ))} 
+      ))}
     </div>
   );
 }

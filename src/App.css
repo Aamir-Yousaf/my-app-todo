@@ -1,12 +1,32 @@
 .App {
   text-align: center;
+  background-color: aqua;
+  max-width: 800px;
+  height: 90vh;
+  border-radius: 30px;
+  padding: 30px;
+  margin:0 auto;
+  margin-top: 30px;
 }
-
+.output{
+  font-size: 25px !important;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
+.input-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem; /* Adjust as needed */
+}
 
+.todo-input{
+  max-width: 300px;
+  margin: 0 auto;
+  padding-left: 10px;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
